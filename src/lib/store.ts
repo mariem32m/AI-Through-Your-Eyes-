@@ -437,9 +437,9 @@ function demoStore(): Store {
     ai_track_expectations: string;
   }) {
     const s = await ensureSession();
-    const list = loadDemoSurveys(s.id);
-    const rec = { id: cryptoRandomId(), created_at: new Date().toISOString(), ...data, session_id: s.id, nickname: data.nickname ?? "" };
-    saveDemoSurveys(s.id, [rec, ...list]);
+    const list = loadDemoSurveys(s.session.id);
+    const rec = { id: cryptoRandomId(), created_at: new Date().toISOString(), ...data, session_id: s.session.id, nickname: data.nickname ?? "" };
+    saveDemoSurveys(s.session.id, [rec, ...list]);
     return rec;
   }
 
