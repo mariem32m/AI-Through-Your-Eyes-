@@ -306,7 +306,7 @@ function supabaseStore(): Store {
     setModeration,
     updateConfig,
     resetSession,
-    deleteSession,
+    deleteSession: deleteSessionData,
     invalidateSession,
     subscribe,
   };
