@@ -301,10 +301,13 @@ function supabaseStore(): Store {
     getSubmissions,
     hostList,
     submit,
+    submitSurvey,
+    listSurveys,
     setModeration,
     updateConfig,
     resetSession,
-    deleteSessionData,
+    deleteSession,
+    invalidateSession,
     subscribe,
   };
 }
