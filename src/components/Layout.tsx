@@ -89,6 +89,9 @@ export function TopBar({ showHome = true }: { showHome?: boolean }) {
             🏠 {t("back.home")}
           </Link>
         )}
+        <Link to="/dashboard" className="text-sm font-bold text-violet-700 underline-offset-4 hover:underline">
+          📊 {t("host.title")}
+        </Link>
         <ModeBadge />
         <LanguageSwitcher />
       </div>

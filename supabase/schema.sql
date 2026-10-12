@@ -1,5 +1,5 @@
 -- =====================================================================
--- AI Spin & Share — Supabase schema
+-- AI Through Your Eyes — Supabase schema
 -- Run this in the Supabase SQL editor (or `supabase db push`).
 -- =====================================================================
 

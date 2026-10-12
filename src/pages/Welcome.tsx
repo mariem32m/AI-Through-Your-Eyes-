@@ -36,10 +36,10 @@ export function Welcome() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4 md:justify-start">
             <Link to="/play" className="btn-base btn-spin animate-pop">
-              🎡 {t("start.playing")}
+              🎯 {t("start.playing")}
             </Link>
-            <Link to="/wall" className="btn-base btn-secondary animate-pop stagger-1">
-              🧩 {t("view.wall")}
+            <Link to="/dashboard" className="btn-base btn-secondary animate-pop stagger-1">
+              📊 {t("host.title")}
             </Link>
           </div>
         </div>

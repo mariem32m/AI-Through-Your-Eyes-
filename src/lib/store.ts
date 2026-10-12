@@ -252,11 +252,8 @@ function supabaseStore(): Store {
     return data as Submission;
   }
 
-  async function setModeration(id: string, status: ModerationStatus): Promise<void> {
-    // Moderation is privileged: run it through the host Edge Function
-    // (verify_token = host hash). Public users cannot update rows.
-    await callHostAction("set_moderation", { id, status });
-  }
+  async function submitSurvey() { throw new Error("submitSurvey not implemented"); }
+  async function listSurveys() { return []; }
 
   async function updateConfig(config: SessionConfigUpdate): Promise<GameSession> {
     const { mode, session } = await ensureSession();
@@ -417,6 +414,40 @@ function demoStore(): Store {
     };
   }
 
+  function demoSurveysKey(sessionId: string) {
+    return `${DEMO_STORE_KEY}:surveys:${sessionId}`;
+  }
+  function loadDemoSurveys(sessionId: string) {
+    const raw = readStore(demoSurveysKey(sessionId), null);
+    if (!raw) return [];
+    try { const l = JSON.parse(raw); return Array.isArray(l) ? l : []; } catch { return []; }
+  }
+  function saveDemoSurveys(sessionId: string, list: any[]) {
+    writeStore(demoSurveysKey(sessionId), JSON.stringify(list));
+  }
+
+  async function submitSurvey(data: {
+    session_id: string;
+    nickname?: string;
+    question_1_answer: string;
+    question_2_answer: string;
+    question_3_answer: string;
+    question_4_answer: string;
+    question_5_answer: string;
+    ai_track_expectations: string;
+  }) {
+    const s = await ensureSession();
+    const list = loadDemoSurveys(s.id);
+    const rec = { id: cryptoRandomId(), created_at: new Date().toISOString(), ...data, session_id: s.id, nickname: data.nickname ?? "" };
+    saveDemoSurveys(s.id, [rec, ...list]);
+    return rec;
+  }
+
+  async function listSurveys(_sessionId: string) {
+    const s = await ensureSession();
+    return loadDemoSurveys(s.session.id);
+  }
+
   return {
     mode: "demo",
     ensureSession,
@@ -428,6 +459,9 @@ function demoStore(): Store {
     resetSession,
     deleteSessionData,
     subscribe,
+    invalidateSession,
+    submitSurvey,
+    listSurveys,
   };
 }
 
@@ -462,4 +496,13 @@ export function formatTimestamp(iso: string, lang: "en" | "ar"): string {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+/** Browser-usable crypto random id. */
+export function cryptoRandomId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
+  // Fallback: simple random hex
+  let h = "";
+  for (let i = 0; i < 36; i++) h += Math.floor(Math.random() * 16).toString(16);
+  return h;
 }
